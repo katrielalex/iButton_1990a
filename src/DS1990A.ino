@@ -1,3 +1,4 @@
+#ifndef READER
 #include "OneWireSlave.h"
 #include "roms.config"
 
@@ -14,3 +15,4 @@ void loop() {
   digitalWrite(13, LOW);
   ds.waitForRequest(false);
 }
+#endif
