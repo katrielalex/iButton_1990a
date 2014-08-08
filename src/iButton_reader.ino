@@ -27,9 +27,7 @@ byte n = 0;
 void setup() {
 	Serial.begin(9600);
 	n = EEPROM.read(0);
-
-
-	pinMode(2, INPUT);
+	
 	pinMode(ledpin, OUTPUT);
 	digitalWrite(ledpin, LOW);
 }
@@ -48,14 +46,15 @@ void loop() {
 		return;
 	} else {
 		if(n <= EEPROM_MAX) {
-			EEPROM.write(0, n++);
+			EEPROM.write(0, n+1);
 			Serial.print("Storing key "); Serial.println(n, DEC);
 			for(byte i=0; i<8; i++) {
 				Serial.print(addr[i], HEX);
 				EEPROM.write(1 + (8 * n) + i, addr[i]);
 				Serial.print(" ");
 			}
-			Serial.print("\n");
+			n++;
+			Serial.println("");
 			digitalWrite(ledpin, HIGH);
 			delay(1000);
 			digitalWrite(ledpin, LOW);
@@ -66,15 +65,19 @@ void loop() {
 
 	delay(del);
 	// check if there's anything on the serial buffer indicating we can dump
-	if(Serial.available() && n > 0) {
-		dumpEEPROM();
+	if(Serial.available()) {
+		Serial.println("Input on Serial buffer");
+		if(n > 0) {
+			dumpEEPROM();
+		} else {
+			while(Serial.read() != -1) {}
+		}
 	}
 	return;
 }
 
 void dumpEEPROM() {
 	// Dump EEPROM to serial
-	n = EEPROM.read(0);
 	Serial.print(n, DEC); Serial.println(" keys stored:");
 
 	int i, j;
@@ -86,6 +89,15 @@ void dumpEEPROM() {
 		Serial.println("");
 	}
 
-	EEPROM.write(0,0);
+
+	//Reset key count if serial was 'r'
+	if(Serial.read() == 'r') {
+		Serial.println("Resetting keys");
+		EEPROM.write(0,0);
+		n = 0;
+	}
+
+	//Flush Serial
+	while(Serial.read() != -1) {}
 }
 #endif
