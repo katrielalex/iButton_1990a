@@ -1,0 +1,3 @@
+[submodule "lib/OneWireNoResistor"]
+	path = lib/OneWireNoResistor
+	url = git@github.com:bigjosh/OneWireNoResistor.git
