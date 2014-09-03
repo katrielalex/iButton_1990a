@@ -1,7 +1,7 @@
 iButton_1990a
 =============
 
-Arduino sketch to impersonate an iButton 1990A fob. Based on [OneWireSlave](https://github.com/MarkusLange/OneWireSlave) but heavily modified. The important code is in the OneWireSlave library in lib; the sketch in src just calls its API.
+Arduino sketch to impersonate an iButton 1990A fob. Based on [OneWireSlave](https://github.com/MarkusLange/OneWireSlave) but heavily modified. The important code is in the OneWireSlave library in lib; the sketch in src just calls its API. You should have Arduino installed in the standard location (or else pass it as `ino build -d ARDUINO_DIR`, and you should have the [OneWire](http://playground.arduino.cc/Learning/OneWire) library installed as well.
 
 To run, install [ino](http://inotool.org/) and execute
 
