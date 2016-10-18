@@ -100,6 +100,7 @@ class OneWireSlave:
         return
 
     def recv(self):
+        "Receive eight bits, by calling recvBit eight times and accumulating."
         bitmask = 1
         received = 0
         while (bitmask < 256) and not self.err:
@@ -109,11 +110,18 @@ class OneWireSlave:
         return received
 
     def recvBit(self):
+        """Receive one bit
+
+        High means 1 and low means 0. There will always be a short high pulse at the start of a time
+        window, and then either it will fall (0) or not (1).
+        """
         try:
-            t = machine.time_pulse_us(self.pin, 0, timeout_us=60)
+            t = machine.time_pulse_us(self.pin, 0, timeout_us=100)
             if t > 30:
                 return 0
             else:
                 return 1
-        except:
+        except OSError:
+            # We hit one of the two timeouts, which means it didn't go high,
+            # which means a zero.
             return 0
