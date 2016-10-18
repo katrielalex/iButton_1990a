@@ -13,17 +13,6 @@ class OneWireSlave:
 
         pin.init(self.pin.IN)
 
-    def waitForRequestfake(self, ignore_errors):
-        pinval = 0
-        while 1:
-            pinval = 1 - pinval
-            try:
-                t = machine.time_pulse_us(self.pin, pinval)
-                print("Pin changed to {} after {}".format(pinval, t))
-                continue
-            except:
-                continue
-
     def waitForRequest(self, ignore_errors):
         self.err = ''
         while 1:
