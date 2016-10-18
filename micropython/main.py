@@ -19,11 +19,12 @@ toggleread.init(Pin.IN)
 
 if 1:
     print("Write mode")
-    ows = onewireslave.OneWireSlave(Pin('Y5'), [0x01,0x19,0x76,0x60,0x09,0x00,0x00,0x8e])
+    ows = onewireslave.OneWireSlave(Pin('Y5'), [0x01, 0x19, 0x76, 0x60, 0x09, 0x00, 0x00, 0x8e])
     ows.waitForRequest(False)
 else:
     print("Read mode")
-    ow = onewire.OneWire(Pin('Y5')) # create a OneWire bus on GPIO12
+    # create a OneWire bus on GPIO12
+    ow = onewire.OneWire(Pin('Y5'))
 
     while True:
         roms = ''
@@ -49,4 +50,3 @@ else:
         time.sleep_ms(750)
         os.sync()
         pyb.hard_reset()
-

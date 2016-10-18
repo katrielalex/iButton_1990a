@@ -1,10 +1,10 @@
 # boot.py -- run on boot-up
 # can run arbitrary Python, but best to keep it minimal
 
-import machine
 import pyb
 
-pyb.main('main.py') # main script to run after this one
+# main script to run after this one
+pyb.main('main.py')
 
 pyb.LED(3).on()
 pyb.delay(1000)
@@ -17,7 +17,10 @@ if usr_switch:
         pyb.delay(100)
         pyb.LED(3).off()
         pyb.delay(100)
-    pyb.usb_mode('VCP+MSC') # act as a serial and a storage device
+
+    # act as a serial and a storage device
+    pyb.usb_mode('VCP+MSC')
 else:
     pyb.usb_mode('VCP')
-#pyb.usb_mode('VCP+HID') # act as a serial device and a mouse
+
+# pyb.usb_mode('VCP+HID') # act as a serial device and a mouse

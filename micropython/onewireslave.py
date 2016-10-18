@@ -1,8 +1,6 @@
-import pyb
-from pyb import disable_irq
-from pyb import enable_irq
 import machine
 import time
+
 
 class OneWireSlave:
     def __init__(self, pin, rom):
@@ -17,7 +15,7 @@ class OneWireSlave:
 
     def waitForRequestfake(self, ignore_errors):
         pinval = 0
-	while 1:
+        while 1:
             pinval = 1 - pinval
             try:
                 t = machine.time_pulse_us(self.pin, pinval)
@@ -27,50 +25,50 @@ class OneWireSlave:
                 continue
 
     def waitForRequest(self, ignore_errors):
-	self.err = ''
+        self.err = ''
         while 1:
             print(self.err)
-	    self.err = ''
+            self.err = ''
             if not self.awaitReset():
                 continue
-            #self.waitForRequestfake(False)
+            # self.waitForRequestfake(False)
             if self.recvAndProcessCmd():
-                #pyb.enable_irq(i)
+                # pyb.enable_irq(i)
                 return True
             if (not self.err or ignore_errors):
                 continue
             else:
                 print("Error: {}".format(self.err))
-        #pyb.enable_irq(i)
-            
+        # pyb.enable_irq(i)
+
     def recvAndProcessCmd(self):
-        #self.waitForRequestfake(False)
-	r = self.recv()        
-	if r == 0x33:
+        # self.waitForRequestfake(False)
+        r = self.recv()
+        if r == 0x33:
             if not self.sendData(self.rom):
                 return False
             return True
         else:
-	    print("Received: {}".format(r))
+            print("Received: {}".format(r))
         self.err = 'Did not receive 0x33'
-	time.sleep_us(1000000)
+        time.sleep_us(1000000)
         return False
 
     def awaitReset(self):
         try:
-	    try:
-		machine.time_pulse_us(self.pin,1)
-	    except:
-		self.err = 'Not Connected'
-		return False
-            t = machine.time_pulse_us(self.pin,0)
+            try:
+                machine.time_pulse_us(self.pin, 1)
+            except:
+                self.err = 'Not Connected'
+                return False
+            t = machine.time_pulse_us(self.pin, 0)
             if t < 480:
                 self.err = 'Very short reset ' + str(t) + 'us'
                 return False
         except:
             self.err = 'Very long reset'
             return False
-	self.pin.init(self.pin.OUT_OD)
+        self.pin.init(self.pin.OUT_OD)
         self.pin.low()
         time.sleep_us(60)
         # let it float
@@ -98,7 +96,7 @@ class OneWireSlave:
 
     def sendBit(self, bit):
         try:
-            machine.time_pulse_us(self.pin,0,timeout_us=60)
+            machine.time_pulse_us(self.pin, 0, timeout_us=60)
         except:
             self.err = 'Write timeslot timeout'
             return
@@ -123,11 +121,10 @@ class OneWireSlave:
 
     def recvBit(self):
         try:
-            t = machine.time_pulse_us(self.pin,0,timeout_us=60)
+            t = machine.time_pulse_us(self.pin, 0, timeout_us=60)
             if t > 30:
                 return 0
             else:
                 return 1
         except:
             return 0
-
